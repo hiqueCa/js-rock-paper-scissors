@@ -1,7 +1,13 @@
+const POSSIBLE_PLAYS = [
+  'rock',
+  'paper',
+  'scissors',
+];
+
 function playGame() {
   for (let i = 0; i < 5; i++) {
     let playerSelection = prompt('Choose your play!');
-    if (playerSelection) {
+    if (playerSelection && POSSIBLE_PLAYS.includes(playerSelection)) {
       console.log(playRound(playerSelection));
     } else {
       console.log("Please, select a valid play!");
@@ -19,9 +25,8 @@ function playRound(playerSelection, computerSelection=computerPlay()) {
 };
 
 function computerPlay(){
-  let possiblePlays = ['rock', 'paper', 'scissors'];
   let playIndex = getRandomIntegerInclusive(0, 2);
-  return possiblePlays[playIndex];
+  return POSSIBLE_PLAYS[playIndex];
 };
 
 function formatOutputString(string) {
