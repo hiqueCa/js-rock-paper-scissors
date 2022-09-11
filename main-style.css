@@ -1,0 +1,27 @@
+.rock-paper-scissor-header {
+  text-align: center;
+}
+
+.game-buttons {
+  text-align: center;
+}
+
+.try-again-button {
+  text-align: center;
+  margin: 10px;
+}
+
+button {
+  font-size: medium;
+  margin: 5px;
+  border-radius: 6px;
+}
+
+.game-results {
+  text-align: center;
+  margin-top: 21.44px;
+}
+
+.choose-weapon-subtitle {
+  text-align: center;
+}
