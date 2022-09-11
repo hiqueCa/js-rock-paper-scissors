@@ -5,7 +5,10 @@ const POSSIBLE_COMPUTER_PLAYS = [
 ];
 
 const playerPossibleSelections = document.querySelectorAll('button');
-const body = document.querySelector('body');
+const body = document.querySelector('body')
+const gameResultsDiv = document.querySelector('div.game-results')
+const gameButtons = document.querySelector('div.game-buttons').children;
+
 let resultDiv = document.createElement('div');
 let scoresDiv = document.createElement('div');
 let playerScore = 0;
@@ -17,6 +20,10 @@ function playGame(playerSelection, computerSelection = computerPlay()) {
   updateScores(gameResult);
   outputRoundResults(gameResult, playerSelection, computerSelection);
   outputScores()
+};
+
+function adjustResultTextSize (size) {
+  resultDiv.style.fontSize = `${size}px`
 };
 
 function updateScores(result) {
@@ -53,13 +60,17 @@ function checkForGameResult(playerSelection, computerSelection) {
 function outputRoundResults(result, playerSelection, computerSelection) {
   if (result == 'Win') {
     resultDiv.textContent =`You ${result}! ${playerSelection} beats ${computerSelection}`;
+    resultDiv.style.color = 'green';
   } else if (result == 'Lose') {
     resultDiv.textContent = `You ${result}! ${computerSelection} beats ${playerSelection}`;
+    resultDiv.style.color = 'darkred';
   } else {
     resultDiv.textContent = `A ${result}! ${playerSelection} equals ${computerSelection}`;
+    resultDiv.style.color = 'orange';
   };
 
-  body.append(resultDiv)
+  adjustResultTextSize(25);
+  gameResultsDiv.append(resultDiv)
 };
 
 function getRandomIntegerInclusive(min, max) {
@@ -71,13 +82,58 @@ function getRandomIntegerInclusive(min, max) {
 };
 
 function outputScores() {
-  body.append(updatedScoresDiv(playerScore, computerScore))
+  gameResultsDiv.append(updatedScoresDiv(playerScore, computerScore))
 };
 
 function updatedScoresDiv(playerScore, computerScore) {
   scoresDiv.textContent = `${playerScore} - ${computerScore}`
   return scoresDiv
-}
+};
+
+function congratsPlayerWin() {
+  scoresDiv.textContent = 'You have beaten the PC. Congratulations';
+};
+
+function warnPlayerLoss() {
+  scoresDiv.textContent = 'You have been beaten. Try again.';
+};
+
+function resetScores() {
+  playerScore = 0;
+  computerScore = 0;
+
+  return playerScore, computerScore;
+};
+
+function tryAgain() {
+  tryAgainDiv = document.createElement('div');
+  tryAgainButton = document.createElement('button');
+
+  tryAgainDiv.append(tryAgainButton);
+
+  tryAgainButton.textContent = "Try Again";
+  tryAgainDiv.className = "try-again-button";
+
+  body.appendChild(tryAgainDiv);
+  
+  tryAgainButton.addEventListener('click', () => {
+    body.removeChild(tryAgainDiv);
+    gameResultsDiv.replaceChildren();
+    enableGameButtons();
+  });
+};
+
+function disableGameButtons() {
+  for (let button of gameButtons) {
+    button.disabled = true;
+  };
+};
+
+function enableGameButtons() {
+  for (let button of gameButtons) {
+    button.disabled = false;
+  };
+};
 
 playerPossibleSelections.forEach( selection => {
   selection.addEventListener('click', () => {
@@ -86,14 +142,16 @@ playerPossibleSelections.forEach( selection => {
     playGame(playerSelection);
 
     if (playerScore === 5) {
-      playerScore = 0
-      computerScore = 0
-      scoresDiv.textContent = 'You have beaten the PC. Congratulations'
+      disableGameButtons();
+      resetScores();
+      congratsPlayerWin();
+      tryAgain();
     }
     else if (computerScore === 5) {
-      playerScore = 0
-      computerScore = 0
-      scoresDiv.textContent = 'You have been beaten. Try again.'
+      disableGameButtons();
+      resetScores();
+      warnPlayerLoss();
+      tryAgain();
     };
   });
 });
