@@ -1,8 +1,29 @@
 const POSSIBLE_COMPUTER_PLAYS = [
-  'rock',
-  'paper',
-  'scissors',
+  'Rock',
+  'Paper',
+  'Scissors',
 ];
+
+const OUTCOME_RESULT_PROPS = {
+  'Win': {
+    color: 'green',
+    textContent: function(playerSelection, computerSelection) {
+      return `You win! ${playerSelection} beats ${computerSelection}`;
+    },
+  },
+  'Lose': {
+    color: 'darkred',
+    textContent: function(playerSelection, computerSelection) {
+      return `You lose! ${computerSelection} beats ${playerSelection}`;
+    },
+  },
+  'Draw': {
+    color: 'orange',
+    textContent: function(playerSelection, computerSelection) {
+      return `A draw! ${playerSelection} equals ${computerSelection}`;
+    },
+  },
+};
 
 const playerPossibleSelections = document.querySelectorAll('button');
 const body = document.querySelector('body')
@@ -22,8 +43,15 @@ function playGame(playerSelection, computerSelection = computerPlay()) {
   outputScores()
 };
 
-function adjustResultTextSize (size) {
+function adjustResultTextSize(size) {
   resultDiv.style.fontSize = `${size}px`
+};
+
+function updateResultDiv(outcome, playerSelection, computerSelection) {
+  const { color, textContent } = OUTCOME_RESULT_PROPS[outcome];
+
+  resultDiv.style.color = color;
+  resultDiv.textContent = textContent(playerSelection, computerSelection);
 };
 
 function updateScores(result) {
@@ -42,15 +70,14 @@ function computerPlay(){
 
 function checkForGameResult(playerSelection, computerSelection) {
   let result = 'Win'
-  const caseInsensitivePlayerSelection = playerSelection.toLowerCase();
 
-  if (caseInsensitivePlayerSelection === 'rock' && computerSelection === 'paper') {
+  if (playerSelection === 'Rock' && computerSelection === 'Paper') {
     result = 'Lose';
-  } else if (caseInsensitivePlayerSelection === 'paper' && computerSelection === 'scissors') {
+  } else if (playerSelection === 'Paper' && computerSelection === 'Scissors') {
     result = 'Lose';
-  } else if (caseInsensitivePlayerSelection === 'scissors' && computerSelection === 'rock') {
+  } else if (playerSelection === 'Scissors' && computerSelection === 'Rock') {
     result = 'Lose';
-  } else if (caseInsensitivePlayerSelection == computerSelection) {
+  } else if (playerSelection === computerSelection) {
     result = 'Draw';
   }
 
@@ -58,17 +85,7 @@ function checkForGameResult(playerSelection, computerSelection) {
 };
 
 function outputRoundResults(result, playerSelection, computerSelection) {
-  if (result == 'Win') {
-    resultDiv.textContent =`You ${result}! ${playerSelection} beats ${computerSelection}`;
-    resultDiv.style.color = 'green';
-  } else if (result == 'Lose') {
-    resultDiv.textContent = `You ${result}! ${computerSelection} beats ${playerSelection}`;
-    resultDiv.style.color = 'darkred';
-  } else {
-    resultDiv.textContent = `A ${result}! ${playerSelection} equals ${computerSelection}`;
-    resultDiv.style.color = 'orange';
-  };
-
+  updateResultDiv(result, playerSelection, computerSelection);
   adjustResultTextSize(25);
   gameResultsDiv.append(resultDiv)
 };
