@@ -4,11 +4,9 @@ import {
   computerPlay,
 } from './helper-functions.js';
 import scores from './scores-manager.js';
+import domElements from './dom-elements-manipulator.js';
 
 const playerPossibleSelections = document.querySelectorAll('button');
-const body = document.querySelector('body')
-const gameResultsDiv = document.querySelector('div.game-results')
-const gameButtons = document.querySelector('div.game-buttons').children;
 
 let resultDiv = document.createElement('div');
 let scoresDiv = document.createElement('div');
@@ -35,11 +33,11 @@ function updateResultDiv(outcome, playerSelection, computerSelection) {
 function outputRoundResults(result, playerSelection, computerSelection) {
   updateResultDiv(result, playerSelection, computerSelection);
   adjustResultTextSize(25);
-  gameResultsDiv.append(resultDiv)
+  domElements.gameResultsDiv.append(resultDiv)
 };
 
 function outputScores() {
-  gameResultsDiv.append(updatedScoresDiv(scores.playerScore, scores.computerScore))
+  domElements.gameResultsDiv.append(updatedScoresDiv(scores.playerScore, scores.computerScore))
 };
 
 function updatedScoresDiv(playerScore, computerScore) {
@@ -64,25 +62,13 @@ function tryAgain() {
   tryAgainButton.textContent = "Try Again";
   tryAgainDiv.className = "try-again-container";
 
-  body.appendChild(tryAgainDiv);
+  domElements.body.appendChild(tryAgainDiv);
   
   tryAgainButton.addEventListener('click', () => {
-    body.removeChild(tryAgainDiv);
-    gameResultsDiv.replaceChildren();
-    enableGameButtons();
+    domElements.body.removeChild(tryAgainDiv);
+    domElements.gameResultsDiv.replaceChildren();
+    domElements.enableGameButtons();
   });
-};
-
-function disableGameButtons() {
-  for (let button of gameButtons) {
-    button.disabled = true;
-  };
-};
-
-function enableGameButtons() {
-  for (let button of gameButtons) {
-    button.disabled = false;
-  };
 };
 
 playerPossibleSelections.forEach( selection => {
@@ -92,13 +78,13 @@ playerPossibleSelections.forEach( selection => {
     playGame(playerSelection);
 
     if (scores.playerScore === 5) {
-      disableGameButtons();
+      domElements.disableGameButtons();
       scores.resetScores();
       congratsPlayerWin();
       tryAgain();
     }
     else if (scores.computerScore === 5) {
-      disableGameButtons();
+      domElements.disableGameButtons();
       scores.resetScores();
       warnPlayerLoss();
       tryAgain();
