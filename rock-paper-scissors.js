@@ -1,7 +1,8 @@
-import {
-  POSSIBLE_COMPUTER_PLAYS,
-  OUTCOME_RESULT_PROPS,
-} from './constants.js';
+import { OUTCOME_RESULT_PROPS } from './constants.js';
+import { 
+  defineGameResult,
+  computerPlay,
+} from './helper-functions.js';
 
 const playerPossibleSelections = document.querySelectorAll('button');
 const body = document.querySelector('body')
@@ -10,11 +11,12 @@ const gameButtons = document.querySelector('div.game-buttons').children;
 
 let resultDiv = document.createElement('div');
 let scoresDiv = document.createElement('div');
+
 let playerScore = 0;
 let computerScore = 0;
 
 function playGame(playerSelection, computerSelection = computerPlay()) {
-  const gameResult = checkForGameResult(playerSelection, computerSelection);
+  const gameResult = defineGameResult(playerSelection, computerSelection);
 
   updateScores(gameResult);
   outputRoundResults(gameResult, playerSelection, computerSelection);
@@ -41,39 +43,10 @@ function updateScores(result) {
   };
 };
 
-function computerPlay(){
-  const playIndex = getRandomIntegerInclusive(0, 2);
-  return POSSIBLE_COMPUTER_PLAYS[playIndex];
-};
-
-function checkForGameResult(playerSelection, computerSelection) {
-  let result = 'Win'
-
-  if (playerSelection === 'Rock' && computerSelection === 'Paper') {
-    result = 'Lose';
-  } else if (playerSelection === 'Paper' && computerSelection === 'Scissors') {
-    result = 'Lose';
-  } else if (playerSelection === 'Scissors' && computerSelection === 'Rock') {
-    result = 'Lose';
-  } else if (playerSelection === computerSelection) {
-    result = 'Draw';
-  }
-
-  return result;
-};
-
 function outputRoundResults(result, playerSelection, computerSelection) {
   updateResultDiv(result, playerSelection, computerSelection);
   adjustResultTextSize(25);
   gameResultsDiv.append(resultDiv)
-};
-
-function getRandomIntegerInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max) + 1;
-  const pseudoRandomNumber = Math.random();
-
-  return Math.floor(pseudoRandomNumber * (max - min)) + min;
 };
 
 function outputScores() {
