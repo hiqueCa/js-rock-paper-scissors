@@ -1,29 +1,7 @@
-const POSSIBLE_COMPUTER_PLAYS = [
-  'Rock',
-  'Paper',
-  'Scissors',
-];
-
-const OUTCOME_RESULT_PROPS = {
-  'Win': {
-    color: 'green',
-    textContent: function(playerSelection, computerSelection) {
-      return `You win! ${playerSelection} beats ${computerSelection}`;
-    },
-  },
-  'Lose': {
-    color: 'darkred',
-    textContent: function(playerSelection, computerSelection) {
-      return `You lose! ${computerSelection} beats ${playerSelection}`;
-    },
-  },
-  'Draw': {
-    color: 'orange',
-    textContent: function(playerSelection, computerSelection) {
-      return `A draw! ${playerSelection} equals ${computerSelection}`;
-    },
-  },
-};
+import {
+  POSSIBLE_COMPUTER_PLAYS,
+  OUTCOME_RESULT_PROPS,
+} from './constants.js';
 
 const playerPossibleSelections = document.querySelectorAll('button');
 const body = document.querySelector('body')
@@ -123,8 +101,8 @@ function resetScores() {
 };
 
 function tryAgain() {
-  tryAgainDiv = document.createElement('div');
-  tryAgainButton = document.createElement('button');
+  const tryAgainDiv = document.createElement('div');
+  const tryAgainButton = document.createElement('button');
 
   tryAgainDiv.append(tryAgainButton);
 
