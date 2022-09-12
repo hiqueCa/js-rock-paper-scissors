@@ -1,29 +1,9 @@
-const POSSIBLE_COMPUTER_PLAYS = [
-  'Rock',
-  'Paper',
-  'Scissors',
-];
-
-const OUTCOME_RESULT_PROPS = {
-  'Win': {
-    color: 'green',
-    textContent: function(playerSelection, computerSelection) {
-      return `You win! ${playerSelection} beats ${computerSelection}`;
-    },
-  },
-  'Lose': {
-    color: 'darkred',
-    textContent: function(playerSelection, computerSelection) {
-      return `You lose! ${computerSelection} beats ${playerSelection}`;
-    },
-  },
-  'Draw': {
-    color: 'orange',
-    textContent: function(playerSelection, computerSelection) {
-      return `A draw! ${playerSelection} equals ${computerSelection}`;
-    },
-  },
-};
+import { OUTCOME_RESULT_PROPS } from './constants.js';
+import { 
+  defineGameResult,
+  computerPlay,
+} from './helper-functions.js';
+import scores from './scores-manager.js';
 
 const playerPossibleSelections = document.querySelectorAll('button');
 const body = document.querySelector('body')
@@ -32,13 +12,11 @@ const gameButtons = document.querySelector('div.game-buttons').children;
 
 let resultDiv = document.createElement('div');
 let scoresDiv = document.createElement('div');
-let playerScore = 0;
-let computerScore = 0;
 
 function playGame(playerSelection, computerSelection = computerPlay()) {
-  const gameResult = checkForGameResult(playerSelection, computerSelection);
+  const gameResult = defineGameResult(playerSelection, computerSelection);
 
-  updateScores(gameResult);
+  scores.updateScores(gameResult);
   outputRoundResults(gameResult, playerSelection, computerSelection);
   outputScores()
 };
@@ -54,52 +32,14 @@ function updateResultDiv(outcome, playerSelection, computerSelection) {
   resultDiv.textContent = textContent(playerSelection, computerSelection);
 };
 
-function updateScores(result) {
-  if (result === 'Win') {
-    playerScore += 1;
-  }
-  else if (result === 'Lose') {
-    computerScore += 1;
-  };
-};
-
-function computerPlay(){
-  const playIndex = getRandomIntegerInclusive(0, 2);
-  return POSSIBLE_COMPUTER_PLAYS[playIndex];
-};
-
-function checkForGameResult(playerSelection, computerSelection) {
-  let result = 'Win'
-
-  if (playerSelection === 'Rock' && computerSelection === 'Paper') {
-    result = 'Lose';
-  } else if (playerSelection === 'Paper' && computerSelection === 'Scissors') {
-    result = 'Lose';
-  } else if (playerSelection === 'Scissors' && computerSelection === 'Rock') {
-    result = 'Lose';
-  } else if (playerSelection === computerSelection) {
-    result = 'Draw';
-  }
-
-  return result;
-};
-
 function outputRoundResults(result, playerSelection, computerSelection) {
   updateResultDiv(result, playerSelection, computerSelection);
   adjustResultTextSize(25);
   gameResultsDiv.append(resultDiv)
 };
 
-function getRandomIntegerInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max) + 1;
-  const pseudoRandomNumber = Math.random();
-
-  return Math.floor(pseudoRandomNumber * (max - min)) + min;
-};
-
 function outputScores() {
-  gameResultsDiv.append(updatedScoresDiv(playerScore, computerScore))
+  gameResultsDiv.append(updatedScoresDiv(scores.playerScore, scores.computerScore))
 };
 
 function updatedScoresDiv(playerScore, computerScore) {
@@ -115,16 +55,9 @@ function warnPlayerLoss() {
   scoresDiv.textContent = 'You have been beaten. Try again.';
 };
 
-function resetScores() {
-  playerScore = 0;
-  computerScore = 0;
-
-  return playerScore, computerScore;
-};
-
 function tryAgain() {
-  tryAgainDiv = document.createElement('div');
-  tryAgainButton = document.createElement('button');
+  const tryAgainDiv = document.createElement('div');
+  const tryAgainButton = document.createElement('button');
 
   tryAgainDiv.append(tryAgainButton);
 
@@ -158,15 +91,15 @@ playerPossibleSelections.forEach( selection => {
 
     playGame(playerSelection);
 
-    if (playerScore === 5) {
+    if (scores.playerScore === 5) {
       disableGameButtons();
-      resetScores();
+      scores.resetScores();
       congratsPlayerWin();
       tryAgain();
     }
-    else if (computerScore === 5) {
+    else if (scores.computerScore === 5) {
       disableGameButtons();
-      resetScores();
+      scores.resetScores();
       warnPlayerLoss();
       tryAgain();
     };
