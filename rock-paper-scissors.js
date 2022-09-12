@@ -62,7 +62,7 @@ function tryAgain() {
   tryAgainDiv.append(tryAgainButton);
 
   tryAgainButton.textContent = "Try Again";
-  tryAgainDiv.className = "try-again-button";
+  tryAgainDiv.className = "try-again-container";
 
   body.appendChild(tryAgainDiv);
   

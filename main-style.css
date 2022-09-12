@@ -6,15 +6,20 @@
   text-align: center;
 }
 
-.try-again-button {
-  text-align: center;
-  margin: 10px;
-}
-
 button {
   font-size: medium;
   margin: 5px;
   border-radius: 6px;
+  width: 80px;
+}
+
+.try-again-container {
+  text-align: center;
+}
+
+.try-again-container button {
+  width: auto;
+  margin: 10px;
 }
 
 .game-results {
